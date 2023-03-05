@@ -47,6 +47,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>co.com.neoris.banco</groupId>
+			<artifactId>comun</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
