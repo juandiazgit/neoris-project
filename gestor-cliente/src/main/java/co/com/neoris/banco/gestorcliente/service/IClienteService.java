@@ -11,8 +11,9 @@ public interface IClienteService {
 	
 	ResponseEntity<ResponseDto> getCliente(Integer identificacion);
 	
-	ResponseEntity<ResponseDto> updateCliente(Integer identificacion);
+	ResponseEntity<ResponseDto> updateCliente(Integer identificacion, ClienteDto clienteDto);
 	
-	ResponseEntity<String> deleteCliente(Integer identificacion);
+	ResponseEntity<ResponseDto> deleteCliente(Integer identificacion);
 	
+	ResponseEntity<ResponseDto> getAllCliente();
 }
