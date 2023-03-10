@@ -74,16 +74,11 @@ public class ClienteService implements IClienteService{
 			Optional<ClienteEntity> clienteEnt = clienteRepository.findByPersonaEntity_identificacion(identificacion);
 			ResponseDto responseDto = null;
 			if (clienteEnt.isPresent()) {
-				clienteEnt.get().setClienteIden(clienteDto.getClienteIden());
-				clienteEnt.get().setContrasena(clienteDto.getContrasena());
-				clienteEnt.get().setEstado(clienteDto.getEstado());
-				clienteEnt.get().getPersonaEntity().setDireccion(clienteDto.getPersona().getDireccion());
-				clienteEnt.get().getPersonaEntity().setEdad(clienteDto.getPersona().getEdad());
-				clienteEnt.get().getPersonaEntity().setGenero(clienteDto.getPersona().getGenero());
-				clienteEnt.get().getPersonaEntity().setIdentificacion(clienteDto.getPersona().getIdentificacion());
-				clienteEnt.get().getPersonaEntity().setNombre(clienteDto.getPersona().getNombre());
-				clienteEnt.get().getPersonaEntity().setTelefono(clienteDto.getPersona().getTelefono());
-				clienteEnt = Optional.of(clienteRepository.save(clienteEnt.get()));
+				ClienteEntity clienteSent = ClienteMapper.INSTANCE.dtoToEntity(clienteDto);
+				clienteSent.setId(clienteEnt.get().getId());
+				clienteSent.getPersonaEntity().setId(clienteEnt.get().getPersonaEntity().getId());
+				
+				clienteEnt = Optional.of(clienteRepository.save(clienteSent));
 				ClienteDto clienteDtoUpd =  ClienteMapper.INSTANCE.entityToDto(clienteEnt.get());
 				responseDto = ResponseDto.builder().menssage(HttpStatus.OK.name())
 		   				  .codeResponse(HttpStatus.OK.value()).objectResponse(clienteDtoUpd).build();
