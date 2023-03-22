@@ -11,4 +11,5 @@ public class Constants {
 	public static String DELETE_CLIENTE = "Cliente eliminado.";
 	public static String ERROR_DELETE_CLIENTE = "Error al eliminar el cliente.";
 	public static String ERROR_UPDATE_CLIENTE = "Error al actualizar el cliente.";
+	public static String ERROR_GET_CUENTA = "Error al consultar la cuenta.";
 }
