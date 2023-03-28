@@ -21,6 +21,6 @@ public class CuentaGeneralDto {
 	
 	private Boolean estado;
 	
-	private String numeroIdentificacion;
+	private Integer numeroIdentificacion;
 	
 }

@@ -7,9 +7,13 @@ import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfig
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.session.SessionAutoConfiguration;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+@EnableEurekaClient
+@EnableFeignClients(basePackages = "co.com.neoris.banco.comun.feign")
 @EnableAutoConfiguration(exclude = {JpaRepositoriesAutoConfiguration.class,SessionAutoConfiguration.class})
 @EntityScan(basePackages = "co.com.neoris.banco", basePackageClasses = {GestorCuentaApplication.class})
 @EnableJpaRepositories("co.com.neoris.banco.comun.repository")

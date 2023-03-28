@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.com.neoris.banco.comun.dto.CuentaDto;
 import co.com.neoris.banco.comun.dto.ResponseDto;
+import co.com.neoris.banco.comun.dto.general.CuentaGeneralDto;
 import co.com.neoris.banco.gestorcuenta.service.ICuentaService;
 import lombok.RequiredArgsConstructor;
 
@@ -33,8 +34,8 @@ public class CuentaController {
 	}
 	
 	@PostMapping("cuenta")
-	public ResponseEntity<ResponseDto> saveClienteByIdentificacion(@RequestBody CuentaDto cuentaDto){
-		return iCuentaService.createCuenta(cuentaDto);
+	public ResponseEntity<ResponseDto> saveClienteByIdentificacion(@RequestBody CuentaGeneralDto cuentaGeneralDto){
+		return iCuentaService.createCuenta(cuentaGeneralDto);
 	}
 	
 	@DeleteMapping("cuenta/num-ident/{identificacion}")
