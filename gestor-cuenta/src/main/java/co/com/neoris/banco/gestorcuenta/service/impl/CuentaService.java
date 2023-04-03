@@ -1,7 +1,10 @@
 package co.com.neoris.banco.gestorcuenta.service.impl;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -15,11 +18,9 @@ import co.com.neoris.banco.comun.dto.general.CuentaGeneralDto;
 import co.com.neoris.banco.comun.entity.ClienteEntity;
 import co.com.neoris.banco.comun.entity.CuentaEntity;
 import co.com.neoris.banco.comun.exception.CustomException;
-import co.com.neoris.banco.comun.mapper.ClienteMapper;
+import co.com.neoris.banco.comun.feign.GestorClienteFeign;
 import co.com.neoris.banco.comun.mapper.CuentaMapper;
-import co.com.neoris.banco.comun.mapper.PersonaMapper;
 import co.com.neoris.banco.comun.mapper.general.CuentaGeneralMapper;
-import co.com.neoris.banco.comun.repository.ClienteRepository;
 import co.com.neoris.banco.comun.repository.CuentaRepository;
 import co.com.neoris.banco.comun.util.Constants;
 import co.com.neoris.banco.gestorcuenta.service.ICuentaService;
@@ -32,26 +33,41 @@ import lombok.extern.slf4j.Slf4j;
 public class CuentaService implements ICuentaService{
 
 	private final CuentaRepository cuentaRepository;
+	private final GestorClienteFeign gestorClienteFeign;
 	
 	/**
 	 * Crear cuenta
 	 */
 	@Override
-	public ResponseEntity<ResponseDto> createCuenta(CuentaDto cuentaDto) {
-//		try {
-//			ClienteEntity clienteEntity = ClienteMapper.INSTANCE.dtoToEntity(clienteDto);
-//			clienteEntity.setId(null);
-//			clienteEntity.getPersonaEntity().setId(null);
-//			clienteEntity = clienteRepository.save(clienteEntity);
-//			ClienteDto clienteDtoSave =  ClienteMapper.INSTANCE.entityToDto(clienteEntity);
-//			ResponseDto responseDto = ResponseDto.builder().menssage(HttpStatus.OK.name())
-//	                 				  .codeResponse(HttpStatus.OK.value()).objectResponse(clienteDtoSave).build();
-//			return new ResponseEntity<>(responseDto,HttpStatus.OK);
-//		} catch(Exception ex) {
-//			log.error(Constants.ERROR_SAVE_CLIENTE,ex);
-//			throw new CustomException(Constants.ERROR_SAVE_CLIENTE+ex.getMessage());
-//		}
-		return null; //Borrar
+	public ResponseEntity<ResponseDto> createCuenta(CuentaGeneralDto cuentaGeneralDto) {
+		try {
+			ClienteEntity clienteEntity = ClienteEntity.builder().build(); 
+			ResponseEntity<ResponseDto> responseGestorCliente= gestorClienteFeign.getClienteByIdentificacion(cuentaGeneralDto.getNumeroIdentificacion());
+			if (Objects.nonNull(responseGestorCliente.getBody()) && responseGestorCliente.getStatusCode().equals(HttpStatus.OK)) {
+				Map<?, ?> linkedHashMap = (Map<?, ?>) responseGestorCliente.getBody().getObjectResponse();
+				Integer clienteId = (Integer)linkedHashMap.get("id");
+				if (Objects.nonNull(clienteId)) {
+					clienteEntity =ClienteEntity.builder().id(clienteId).build();  
+				}
+			} else {
+				log.error(Constants.ERROR_GET_CLIENTE,responseGestorCliente.getBody());
+				throw new CustomException(Constants.ERROR_GET_CLIENTE);
+			}
+			CuentaDto cuentaDto = CuentaGeneralMapper.INSTANCE.genDtoToDto(cuentaGeneralDto);
+			CuentaEntity cuentaEntity = CuentaMapper.INSTANCE.dtoToEntity(cuentaDto);
+			cuentaEntity.setId(null);
+			cuentaEntity.setClienteEntity(clienteEntity);
+			cuentaEntity = cuentaRepository.save(cuentaEntity);
+			CuentaDto cuentaDtoSave =  CuentaMapper.INSTANCE.entityToDto(cuentaEntity);
+			CuentaGeneralDto cuentaGeneralDtoSave = CuentaGeneralMapper.INSTANCE.dtoToGenDto(cuentaDtoSave);
+			cuentaGeneralDtoSave.setNumeroIdentificacion(cuentaGeneralDto.getNumeroIdentificacion());
+			ResponseDto responseDto = ResponseDto.builder().menssage(HttpStatus.OK.name())
+	                 				  .codeResponse(HttpStatus.OK.value()).objectResponse(cuentaGeneralDtoSave).build();
+			return new ResponseEntity<>(responseDto,HttpStatus.OK);
+		} catch(Exception ex) {
+			log.error(Constants.ERROR_SAVE_CUENTA,ex);
+			throw new CustomException(Constants.ERROR_SAVE_CUENTA+ex.getMessage());
+		}
 	}
 
 	/**
@@ -60,12 +76,16 @@ public class CuentaService implements ICuentaService{
 	@Override
 	public ResponseEntity<ResponseDto> getCuenta(Integer identificacion) {
 		try {
-			Optional<CuentaEntity> cuenta = cuentaRepository.findByClienteEntity_PersonaEntity_identificacion(identificacion);
-			if(cuenta.isPresent()) {
-				CuentaDto cuentaDto = CuentaMapper.INSTANCE.entityToDto(cuenta.get());
-				CuentaGeneralDto cuentaGeneralDto = CuentaGeneralMapper.INSTANCE.dtoToGenDto(cuentaDto);
+			Optional<List<CuentaEntity>> listCuenta = cuentaRepository.findByClienteEntity_PersonaEntity_identificacion(identificacion);
+			if(listCuenta.isPresent()) {
+				List<CuentaDto> listCuentaDto = new ArrayList<>();
+				List<CuentaGeneralDto> listCuentaGeneralDto = new ArrayList<>();
+				
+				listCuenta.get().stream().forEach(cuentaEnt -> listCuentaDto.add(CuentaMapper.INSTANCE.entityToDto(cuentaEnt)));
+				listCuentaDto.stream().forEach(cuentaDto -> listCuentaGeneralDto.add(CuentaGeneralMapper.INSTANCE.dtoToGenDto(cuentaDto)));
+				
 				ResponseDto responseDto = ResponseDto.builder().menssage(HttpStatus.OK.name())
-						                 .codeResponse(HttpStatus.OK.value()).objectResponse(cuentaGeneralDto).build();
+						                 .codeResponse(HttpStatus.OK.value()).objectResponse(listCuentaGeneralDto).build();
 				return new ResponseEntity<>(responseDto,HttpStatus.OK);
 			}
 			return new ResponseEntity<>(ResponseDto.builder().menssage(Constants.NO_DATA_EXISTS)
