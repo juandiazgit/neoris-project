@@ -12,9 +12,9 @@ public interface ICuentaService {
 	
 	ResponseEntity<ResponseDto> getCuenta(Integer identificacion);
 	
-	ResponseEntity<ResponseDto> updateCuenta(Integer identificacion, CuentaDto cuentaDto);
+	ResponseEntity<ResponseDto> updateCuenta(Integer identificacion, CuentaGeneralDto cuentaGeneralDto);
 	
-	ResponseEntity<ResponseDto> deleteCuenta(Integer identificacion);
+	ResponseEntity<ResponseDto> deleteCuenta(Integer identificacion, String numCuenta);
 	
 	ResponseEntity<ResponseDto> getAllCuenta();
 }

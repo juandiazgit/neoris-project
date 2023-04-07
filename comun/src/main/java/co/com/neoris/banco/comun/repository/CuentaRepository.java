@@ -13,4 +13,8 @@ public interface CuentaRepository extends JpaRepository<CuentaEntity, Integer>{
 	
 	Optional<List<CuentaEntity>> findByClienteEntity_PersonaEntity_identificacion(Integer identificacion);
 	
+	Optional<CuentaEntity> findByNumeroCuentaAndClienteEntity_PersonaEntity_identificacion(String numeroCuenta,
+			                    														   Integer identificacion);
+	
+	Optional<CuentaEntity> findByNumeroCuenta(String numeroCuenta);
 }

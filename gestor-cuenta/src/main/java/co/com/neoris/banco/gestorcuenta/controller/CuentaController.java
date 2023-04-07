@@ -38,14 +38,15 @@ public class CuentaController {
 		return iCuentaService.createCuenta(cuentaGeneralDto);
 	}
 	
-	@DeleteMapping("cuenta/num-ident/{identificacion}")
-	public ResponseEntity<ResponseDto> deleteClienteByIdentificacion(@PathVariable("identificacion") Integer identificacion){
-		return iCuentaService.deleteCuenta(identificacion);
+	@DeleteMapping("cuenta/num-ident/{identificacion}/num-cuenta/{numCuenta}")
+	public ResponseEntity<ResponseDto> deleteClienteByIdentificacion(@PathVariable("identificacion") Integer identificacion,
+																	 @PathVariable("numCuenta") String numCuenta){
+		return iCuentaService.deleteCuenta(identificacion,numCuenta);
 	}
 	
 	@PutMapping("cuenta/num-ident/{identificacion}")
 	public ResponseEntity<ResponseDto> updateClienteByIdentificacion(@PathVariable("identificacion") Integer identificacion,
-																	 @RequestBody CuentaDto cuentaDto){
-		return iCuentaService.updateCuenta(identificacion,cuentaDto);
+																	 @RequestBody CuentaGeneralDto cuentaGeneralDto){
+		return iCuentaService.updateCuenta(identificacion,cuentaGeneralDto);
 	}
 }

@@ -4,13 +4,18 @@ public class Constants {
 	
 	private Constants() {}
 	
-	public static String NO_DATA_EXISTS = "No existe data.";
-	public static String ERROR_GET_CLIENTE = "Error al consultar el cliente.";
-	public static String ERROR_GET_ALL_CLIENTE = "Error al consultar la lista de clientes.";
-	public static String ERROR_SAVE_CLIENTE = "Error al crear el cliente.";
-	public static String DELETE_CLIENTE = "Cliente eliminado.";
-	public static String ERROR_DELETE_CLIENTE = "Error al eliminar el cliente.";
-	public static String ERROR_UPDATE_CLIENTE = "Error al actualizar el cliente.";
-	public static String ERROR_GET_CUENTA = "Error al consultar la cuenta.";
-	public static String ERROR_SAVE_CUENTA = "Error al crear la cuenta.";
+	public static final String NO_DATA_EXISTS = "No existe data.";
+	public static final String ERROR_GET_CLIENTE = "Error al consultar el cliente.";
+	public static final String ERROR_GET_ALL_CLIENTE = "Error al consultar la lista de clientes.";
+	public static final String ERROR_SAVE_CLIENTE = "Error al crear el cliente.";
+	public static final String DELETE_CLIENTE = "Cliente eliminado.";
+	public static final String ERROR_DELETE_CLIENTE = "Error al eliminar el cliente.";
+	public static final String ERROR_UPDATE_CLIENTE = "Error al actualizar el cliente.";
+	
+	public static final String ERROR_GET_CUENTA = "Error al consultar la cuenta.";
+	public static final String ERROR_SAVE_CUENTA = "Error al crear la cuenta.";
+	public static final String ERROR_UPDATE_CUENTA = "Error al actualizar la cuenta.";
+	public static final String DELETE_CUENTA = "Cuenta eliminada.";
+	public static final String ERROR_DELETE_CUENTA = "Error al eliminar la cuenta.";
+	public static final String ERROR_GET_ALL_CUENTA = "Error al consultar la lista de cuentas.";
 }
