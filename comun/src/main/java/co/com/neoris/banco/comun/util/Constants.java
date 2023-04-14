@@ -18,4 +18,7 @@ public class Constants {
 	public static final String DELETE_CUENTA = "Cuenta eliminada.";
 	public static final String ERROR_DELETE_CUENTA = "Error al eliminar la cuenta.";
 	public static final String ERROR_GET_ALL_CUENTA = "Error al consultar la lista de cuentas.";
+	
+	public static final String ERROR_GET_MOVIMIENTO = "Error al consultar el movimiento.";
+	public static final String ERROR_SAVE_MOVIMIENTO = "Error al crear el movimiento.";
 }

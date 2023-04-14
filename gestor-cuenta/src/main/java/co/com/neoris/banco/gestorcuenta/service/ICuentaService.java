@@ -2,7 +2,6 @@ package co.com.neoris.banco.gestorcuenta.service;
 
 import org.springframework.http.ResponseEntity;
 
-import co.com.neoris.banco.comun.dto.CuentaDto;
 import co.com.neoris.banco.comun.dto.ResponseDto;
 import co.com.neoris.banco.comun.dto.general.CuentaGeneralDto;
 

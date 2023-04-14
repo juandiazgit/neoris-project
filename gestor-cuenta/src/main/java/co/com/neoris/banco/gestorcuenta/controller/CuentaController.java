@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.com.neoris.banco.comun.dto.CuentaDto;
 import co.com.neoris.banco.comun.dto.ResponseDto;
 import co.com.neoris.banco.comun.dto.general.CuentaGeneralDto;
 import co.com.neoris.banco.gestorcuenta.service.ICuentaService;
@@ -24,29 +23,29 @@ public class CuentaController {
 	private final ICuentaService iCuentaService;
 
 	@GetMapping("cuenta")
-	public ResponseEntity<ResponseDto> getAllCliente(){
+	public ResponseEntity<ResponseDto> getAllCuenta(){
 		return iCuentaService.getAllCuenta();
 	}
 	
 	@GetMapping("cuenta/num-ident/{identificacion}")
-	public ResponseEntity<ResponseDto> getClienteByIdentificacion(@PathVariable("identificacion") Integer identificacion){
+	public ResponseEntity<ResponseDto> getCuenta(@PathVariable("identificacion") Integer identificacion){
 		return iCuentaService.getCuenta(identificacion);
 	}
 	
 	@PostMapping("cuenta")
-	public ResponseEntity<ResponseDto> saveClienteByIdentificacion(@RequestBody CuentaGeneralDto cuentaGeneralDto){
+	public ResponseEntity<ResponseDto> saveCuenta(@RequestBody CuentaGeneralDto cuentaGeneralDto){
 		return iCuentaService.createCuenta(cuentaGeneralDto);
 	}
 	
 	@DeleteMapping("cuenta/num-ident/{identificacion}/num-cuenta/{numCuenta}")
-	public ResponseEntity<ResponseDto> deleteClienteByIdentificacion(@PathVariable("identificacion") Integer identificacion,
-																	 @PathVariable("numCuenta") String numCuenta){
+	public ResponseEntity<ResponseDto> deleteCuenta(@PathVariable("identificacion") Integer identificacion,
+													@PathVariable("numCuenta") String numCuenta){
 		return iCuentaService.deleteCuenta(identificacion,numCuenta);
 	}
 	
 	@PutMapping("cuenta/num-ident/{identificacion}")
-	public ResponseEntity<ResponseDto> updateClienteByIdentificacion(@PathVariable("identificacion") Integer identificacion,
-																	 @RequestBody CuentaGeneralDto cuentaGeneralDto){
+	public ResponseEntity<ResponseDto> updateCuenta(@PathVariable("identificacion") Integer identificacion,
+																	@RequestBody CuentaGeneralDto cuentaGeneralDto){
 		return iCuentaService.updateCuenta(identificacion,cuentaGeneralDto);
 	}
 }
