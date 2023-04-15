@@ -13,4 +13,5 @@ public interface MovimientoRepository extends JpaRepository<MovimientoEntity, In
 	
 	Optional<List<MovimientoEntity>> findByCuentaEntity_numeroCuenta(String numCuenta);
 	
+	Optional<MovimientoEntity> findByIdAndCuentaEntity_numeroCuenta(Integer idMovimiento,String numCuenta);
 }

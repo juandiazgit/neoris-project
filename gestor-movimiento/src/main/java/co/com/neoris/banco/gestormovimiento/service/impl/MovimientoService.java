@@ -20,6 +20,7 @@ import co.com.neoris.banco.comun.mapper.general.MovimientoGeneralMapper;
 import co.com.neoris.banco.comun.repository.CuentaRepository;
 import co.com.neoris.banco.comun.repository.MovimientoRepository;
 import co.com.neoris.banco.comun.util.Constants;
+import co.com.neoris.banco.gestormovimiento.util.ConstantsMovimiento;
 import co.com.neoris.banco.gestormovimiento.service.IMovimientoService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -99,38 +100,36 @@ public class MovimientoService implements IMovimientoService{
 	 * Actualizar un movimiento
 	 */
 	@Override
-	public ResponseEntity<ResponseDto> updateMovimiento(String numCuenta, Integer idMovimiento, MovimientoGeneralDto movimientoGeneralDto) {
-//		try {
-//			ClienteEntity clienteEntity = ClienteEntity.builder().build(); 
-//			ResponseEntity<ResponseDto> responseGestorCliente= gestorClienteFeign.getClienteByIdentificacion(identificacion);
-//			if (Objects.nonNull(responseGestorCliente.getBody()) && responseGestorCliente.getStatusCode().equals(HttpStatus.OK)) {
-//				Map<?, ?> linkedHashMap = (Map<?, ?>) responseGestorCliente.getBody().getObjectResponse();
-//				Integer clienteId = (Integer)linkedHashMap.get("id");
-//				if (Objects.nonNull(clienteId)) {
-//					clienteEntity =ClienteEntity.builder().id(clienteId).build();  
-//				}
-//			} else {
-//				log.error(Constants.ERROR_GET_CLIENTE,responseGestorCliente.getBody());
-//				throw new CustomException(Constants.ERROR_GET_CLIENTE);
-//			}
-//			CuentaDto cuentaDto = CuentaGeneralMapper.INSTANCE.genDtoToDto(cuentaGeneralDto);
-//			CuentaEntity cuentaEntitySent = CuentaMapper.INSTANCE.dtoToEntity(cuentaDto);
-//			Optional<CuentaEntity> cuentaEntity = cuentaRepository.findByNumeroCuentaAndClienteEntity_PersonaEntity_identificacion(cuentaGeneralDto.getNumeroCuenta(),
-//																																   identificacion);
-//			cuentaEntitySent.setId(cuentaEntity.isPresent()?cuentaEntity.get().getId():null);
-//			cuentaEntitySent.setClienteEntity(clienteEntity);
-//			cuentaEntity = Optional.of(cuentaRepository.save(cuentaEntitySent));
-//			CuentaDto cuentaDtoSave =  CuentaMapper.INSTANCE.entityToDto(cuentaEntity.get());
-//			CuentaGeneralDto cuentaGeneralDtoSave = CuentaGeneralMapper.INSTANCE.dtoToGenDto(cuentaDtoSave);
-//			cuentaGeneralDtoSave.setNumeroIdentificacion(cuentaGeneralDto.getNumeroIdentificacion());
-//			ResponseDto responseDto = ResponseDto.builder().menssage(HttpStatus.OK.name())
-//	                 				  .codeResponse(HttpStatus.OK.value()).objectResponse(cuentaGeneralDtoSave).build();
-//			return new ResponseEntity<>(responseDto,HttpStatus.OK);
-//		} catch(Exception ex) {
-//			log.error(Constants.ERROR_UPDATE_CUENTA,ex);
-//			throw new CustomException(Constants.ERROR_UPDATE_CUENTA+ex.getMessage());
-//		}
-		return null; //Borrar
+	public ResponseEntity<ResponseDto> updateMovimiento(MovimientoGeneralDto movimientoGeneralDto) {
+		try {
+			MovimientoEntity movimientoEnt = validateMovimiento.getMovimientoById(movimientoGeneralDto.getId());
+			Optional<CuentaEntity> cuentaEntity = cuentaRepository.findByNumeroCuenta(movimientoGeneralDto.getNumeroCuenta());
+			validateMovimiento.validateMovimientoByCuenta(movimientoEnt.getCuentaEntity().getNumeroCuenta(),
+                    									  movimientoGeneralDto.getNumeroCuenta());
+			if (cuentaEntity.isPresent()) {
+				CuentaEntity cuentaEnt = cuentaEntity.get();
+				MovimientoDto movimientoDto = MovimientoGeneralMapper.INSTANCE.genDtoToDto(movimientoGeneralDto);
+				MovimientoEntity movimientoEntity = MovimientoMapper.INSTANCE.dtoToEntity(movimientoDto);
+				movimientoEntity.setId(movimientoGeneralDto.getId());
+				movimientoEntity.setCuentaEntity(cuentaEnt);
+				validateMovimiento.validateValorMovimiento(movimientoGeneralDto.getTipoMovimiento(), movimientoGeneralDto.getValor(), 
+						                                   movimientoEntity,cuentaEnt);			
+				cuentaRepository.save(cuentaEnt);
+				movimientoEntity = movimientoRepository.save(movimientoEntity);
+				
+				MovimientoDto movimientoDtoSave =  MovimientoMapper.INSTANCE.entityToDto(movimientoEntity);
+				MovimientoGeneralDto movimientoGeneralDtoSave = MovimientoGeneralMapper.INSTANCE.dtoToGenDto(movimientoDtoSave);
+				ResponseDto responseDto = ResponseDto.builder().menssage(HttpStatus.OK.name())
+		                 				  .codeResponse(HttpStatus.OK.value()).objectResponse(movimientoGeneralDtoSave).build();
+				return new ResponseEntity<>(responseDto,HttpStatus.OK);
+			} else {
+				log.error(Constants.ERROR_GET_CUENTA+Constants.NO_DATA_EXISTS);
+				throw new CustomException(Constants.ERROR_GET_CUENTA+Constants.NO_DATA_EXISTS);
+			}
+		} catch(Exception ex) {
+			log.error(Constants.ERROR_UPDATE_MOVIMIENTO,ex);
+			throw new CustomException(Constants.ERROR_UPDATE_MOVIMIENTO+ex.getMessage());
+		}
 	}
 
 	/**

@@ -21,4 +21,5 @@ public class Constants {
 	
 	public static final String ERROR_GET_MOVIMIENTO = "Error al consultar el movimiento.";
 	public static final String ERROR_SAVE_MOVIMIENTO = "Error al crear el movimiento.";
+	public static final String ERROR_UPDATE_MOVIMIENTO = "Error al actualizar el movimiento.";
 }

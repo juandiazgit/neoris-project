@@ -11,7 +11,7 @@ public interface IMovimientoService {
 	
 	ResponseEntity<ResponseDto> getMovimiento(String numCuenta);
 	
-	ResponseEntity<ResponseDto> updateMovimiento(String numCuenta, Integer idMovimiento, MovimientoGeneralDto movimientoGeneralDto);
+	ResponseEntity<ResponseDto> updateMovimiento(MovimientoGeneralDto movimientoGeneralDto);
 	
 	ResponseEntity<ResponseDto> deleteMovimiento(String numCuenta, Integer idMovimiento);
 }

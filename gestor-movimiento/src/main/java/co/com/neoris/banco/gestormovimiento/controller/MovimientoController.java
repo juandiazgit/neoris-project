@@ -32,11 +32,9 @@ public class MovimientoController {
 		return iMovimientoService.createMovimiento(movimientoGeneralDto);
 	}
 	
-	@PutMapping("movimiento/num-cuenta/{numCuenta}/id-movimiento/{idMovimiento}")
-	public ResponseEntity<ResponseDto> updateMovimiento(@PathVariable("numCuenta") String numCuenta,
-														@PathVariable("idMovimiento") Integer idMovimiento,
-														@RequestBody MovimientoGeneralDto movimientoGeneralDto){
-		return iMovimientoService.updateMovimiento(numCuenta,idMovimiento,movimientoGeneralDto);
+	@PutMapping("movimiento")
+	public ResponseEntity<ResponseDto> updateMovimiento(@RequestBody MovimientoGeneralDto movimientoGeneralDto){
+		return iMovimientoService.updateMovimiento(movimientoGeneralDto);
 	}
 	
 	@DeleteMapping("movimiento/num-cuenta/{numCuenta}/id-movimiento/{idMovimiento}")
