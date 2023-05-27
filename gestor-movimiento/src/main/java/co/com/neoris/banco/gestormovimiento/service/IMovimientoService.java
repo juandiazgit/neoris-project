@@ -1,5 +1,7 @@
 package co.com.neoris.banco.gestormovimiento.service;
 
+import java.time.LocalDate;
+
 import org.springframework.http.ResponseEntity;
 
 import co.com.neoris.banco.comun.dto.ResponseDto;
@@ -14,4 +16,6 @@ public interface IMovimientoService {
 	ResponseEntity<ResponseDto> updateMovimiento(MovimientoGeneralDto movimientoGeneralDto);
 	
 	ResponseEntity<ResponseDto> deleteMovimiento(String numCuenta, Integer idMovimiento);
+	
+	ResponseEntity<ResponseDto> retrieveReportByDates(Integer numIdentificacion, LocalDate fechaInicio, LocalDate fechaFin);
 }

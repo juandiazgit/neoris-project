@@ -137,27 +137,47 @@ public class MovimientoService implements IMovimientoService{
 	 */
 	@Override
 	public ResponseEntity<ResponseDto> deleteMovimiento(String numCuenta, Integer idMovimiento) {
-//		try {
-//			ResponseEntity<ResponseDto> responseGestorCliente= gestorClienteFeign.getClienteByIdentificacion(identificacion);
-//			if (Objects.isNull(responseGestorCliente.getBody()) || !responseGestorCliente.getStatusCode().equals(HttpStatus.OK)) {
-//				log.error(Constants.ERROR_GET_CLIENTE,responseGestorCliente.getBody());
-//				throw new CustomException(Constants.ERROR_GET_CLIENTE);
-//			}
-//			Optional<CuentaEntity> cuentaEntity = cuentaRepository.findByNumeroCuenta(numCuenta);
-//			if (cuentaEntity.isPresent()) {
-//				cuentaRepository.delete(cuentaEntity.get());
-//				ResponseDto responseDto = ResponseDto.builder().menssage(Constants.DELETE_CUENTA)
-//		                 .codeResponse(HttpStatus.OK.value()).objectResponse(null).build();
-//				return new ResponseEntity<>(responseDto,HttpStatus.OK);
-//			} else {
-//				log.error(Constants.NO_DATA_EXISTS);
-//				throw new CustomException(Constants.NO_DATA_EXISTS);
-//			}
-//		} catch(Exception ex) {
-//			log.error(Constants.ERROR_DELETE_CUENTA,ex);
-//			throw new CustomException(Constants.ERROR_DELETE_CUENTA+ex.getMessage());
-//		}
-		return null; //Borrar
+		try {
+			Optional<MovimientoEntity> movimientoEntity =  movimientoRepository.findByIdAndCuentaEntity_numeroCuenta(idMovimiento,numCuenta);
+			if (movimientoEntity.isPresent()) {
+				movimientoRepository.deleteById(idMovimiento);
+				ResponseDto responseDto = ResponseDto.builder().menssage(Constants.DELETE_MOVIMIENTO)
+		                 .codeResponse(HttpStatus.OK.value()).objectResponse(null).build();
+				return new ResponseEntity<>(responseDto,HttpStatus.OK);
+			} else {
+				log.error(Constants.ERROR_GET_MOVIMIENTO+Constants.NO_DATA_EXISTS);
+				throw new CustomException(Constants.ERROR_GET_MOVIMIENTO+Constants.NO_DATA_EXISTS);
+			}
+		} catch(Exception ex) {
+			log.error(Constants.ERROR_DELETE_MOVIMIENTO,ex);
+			throw new CustomException(Constants.ERROR_DELETE_MOVIMIENTO+ex.getMessage());
+		}
+	}
+
+	/**
+	 * Genera el reporte de los movimientos
+	 */
+	@Override
+	public ResponseEntity<ResponseDto> retrieveReportByDates(Integer numIdentificacion, 
+															 LocalDate fechaInicio,LocalDate fechaFin) {
+		try {
+			Optional<List<MovimientoEntity>> listMovimientoEntity = movimientoRepository.findByFechaBetween(fechaInicio, fechaFin);
+			List<MovimientoDto> listMovimientoDto = new ArrayList<>();
+			List<MovimientoGeneralDto> listMovimientoGeneralDto = new ArrayList<>();
+			
+			if (listMovimientoEntity.isPresent() && Boolean.FALSE.equals(listMovimientoEntity.get().isEmpty())) {
+				
+				listMovimientoEntity.get().stream().forEach(movimientoEnt -> listMovimientoDto.add(MovimientoMapper.INSTANCE.entityToDto(movimientoEnt)));
+				listMovimientoDto.stream().forEach(movimientoDto -> listMovimientoGeneralDto.add(MovimientoGeneralMapper.INSTANCE.dtoToGenDto(movimientoDto)));
+			}
+			ResponseDto responseDto = ResponseDto.builder().menssage(HttpStatus.OK.name())
+									  	         .codeResponse(HttpStatus.OK.value())
+									  	         .objectResponse(listMovimientoGeneralDto).build();
+			return new ResponseEntity<>(responseDto,HttpStatus.OK);
+		} catch (Exception ex) {
+			log.error(ConstantsMovimiento.ERROR_GENERATE_REPORT_MOVIMIENTO,ex);
+			throw new CustomException(ConstantsMovimiento.ERROR_GENERATE_REPORT_MOVIMIENTO+ex.getMessage());
+		}
 	}
 
 }

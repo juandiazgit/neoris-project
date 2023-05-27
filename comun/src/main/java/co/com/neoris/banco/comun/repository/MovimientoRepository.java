@@ -1,5 +1,6 @@
 package co.com.neoris.banco.comun.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +15,6 @@ public interface MovimientoRepository extends JpaRepository<MovimientoEntity, In
 	Optional<List<MovimientoEntity>> findByCuentaEntity_numeroCuenta(String numCuenta);
 	
 	Optional<MovimientoEntity> findByIdAndCuentaEntity_numeroCuenta(Integer idMovimiento,String numCuenta);
+	
+	Optional<List<MovimientoEntity>> findByFechaBetween(LocalDate fechaInicio, LocalDate fechaFin);
 }

@@ -13,4 +13,6 @@ public class ConstantsMovimiento {
 	public static final String ERROR_SALDO_NO_DISPONIBLE = "Saldo no disponible.";
 	
 	public static final String ERROR_VALIDATE_MOVIMIENTO_BY_CUENTA = "La cuenta del movimiento no se puede modificar.";
+	
+	public static final String ERROR_GENERATE_REPORT_MOVIMIENTO = "Error al generar el reporte de los movimientos.";
 }
