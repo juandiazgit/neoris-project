@@ -20,6 +20,7 @@ public interface MovimientoGeneralMapper {
 	@Mapping(target = "saldo", source = "saldo")
 	@Mapping(target = "estado", source = "estado")
 	@Mapping(target = "numeroCuenta", source = "cuenta.numeroCuenta")
+	@Mapping(target = "tipoCuenta", source = "cuenta.tipoCuenta")
 	@Mapping(target = "nombreCliente", source = "cuenta.cliente.persona.nombre")
 	MovimientoGeneralDto dtoToGenDto(MovimientoDto movimientoDto);
 	

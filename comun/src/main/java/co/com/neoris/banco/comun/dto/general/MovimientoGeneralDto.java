@@ -27,5 +27,7 @@ public class MovimientoGeneralDto {
 	
 	private String numeroCuenta;
 	
+	private String tipoCuenta;
+	
 	private String nombreCliente;
 }
